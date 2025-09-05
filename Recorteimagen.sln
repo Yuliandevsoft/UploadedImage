@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recorteimagen", "Recorteimagen.csproj", "{1453E4A4-75AA-4409-A000-81873198DA91}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uploads", "Uploads", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logos", "Logos", "{96602B06-5283-49F7-B249-C31FDEB2435F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1453E4A4-75AA-4409-A000-81873198DA91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1453E4A4-75AA-4409-A000-81873198DA91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1453E4A4-75AA-4409-A000-81873198DA91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1453E4A4-75AA-4409-A000-81873198DA91}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{96602B06-5283-49F7-B249-C31FDEB2435F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DAF4B40B-1E79-4268-87A6-CA710A28556F}
+	EndGlobalSection
+EndGlobal

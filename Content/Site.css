@@ -1,0 +1,50 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+
+#inputLogo {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Zona opcional de “drop” (arrastrar y soltar) */
+.drop-zone {
+    border: 2px dashed #bdbdbd;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    transition: border-color .2s ease, background-color .2s ease;
+}
+
+    .drop-zone.dragover {
+        border-color: #26a69a;
+        background-color: #e0f2f1;
+    }
+
+/* Imagen de preview */
+#preview {
+    max-width: 100%;
+    max-height: 420px;
+    border-radius: 12px;
+}

@@ -1,0 +1,24 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.pdb
+*.obj
+*.exe
+*.log
+*.tmp
+
+# Build
+bin/
+obj/
+
+# Packages
+packages/
+*.nupkg
+
+# Config
+*.config
+
+# Rider
+.idea/
