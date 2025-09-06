@@ -15,22 +15,20 @@
 
 <button data-target="modalConfigLogo" class="black-text btn grey lighten-2 font-bold modal-trigger rounded-4">
     <i class="material-icons left blue-text">photo</i>
-        <b>Configurar Logo</b>
+    <b>Configurar Logo</b>
 </button>
 
-<div id="modalConfigLogo" class="modal">
-    <div class="modal-content">
-        <h4 class="blue-text">Configurar logo</h4>
+<div id="modalConfigLogo" class="modal Logo">
+    <div class="modal-header" style="display:flex;justify-content:center; border: none;">
+        <h4 style="font-size: 1.64rem;" class="blue-text">Configurar logo</h4>
     </div>
 
     <div class="container" style="margin-top: 24px;">
 
-        <div id="Mensaje">
-
-        </div>
+        <div id="Mensaje"></div>
 
         <!-- Input oculto -->
-        <input type="file" id="inputLogo" accept="image/*" />
+        <input type="file" id="inputLogo" accept="image/*" style="display:none;" />
 
         <!-- Botón Materialize que abre el file input -->
         <div class="section">
@@ -45,35 +43,22 @@
         </span>
 
         <!-- Preview + Cropper -->
-        <div class="section">
-            <img id="preview" alt="" />
+        <div class="section" id="sectionEditImage">
+            <img id="preview" alt="" style="display:none; max-width:220px; border-radius:12px;" />
+            <h5 id="TitleVista" class="blue-text text-darken-1 mtpreviw"></h5>
+            <img id="logoGuardado" class="mtpreviw" style="display:none; max-width:220px; border-radius:12px;" />
         </div>
 
         <!-- Botones de acción -->
         <div class="section">
-            <a id="btnRecortar" class="btn waves-effect waves-light teal ">
-                <i class="material-icons left">done</i> Recortar y guardar
-            </a>
-
-            <div class="section">
-                <a id="btnReset" class="btn waves-effect waves-light red">
-                    <i class="material-icons left">delete_forever</i>
-                    Borrar Imagen
-                </a>
-
-            </div>
+            <a id="btnRecortar" class="btn waves-effect waves-light blue">Guardar</a>
+            <a id="btnReset" class="btn waves-effect waves-light red">Borrar Imagen</a>
         </div>
- 
 
-        <!-- Resultado final -->
-        <div class="section">
-            <h5 id="TitleVista" class="blue-text text-darken-1"></h5>
-            <img id="logoGuardado" style="max-width: 220px; border-radius: 12px;" />
-        </div>
     </div>
 
     <div class="modal-footer">
-        <a href="#!" class="modal-close btn waves-effect waves-light red">Cerrar</a>
+        <a href="#!" id="btnCerrar" class="modal-close btn waves-effect waves-light red">Cerrar</a>
     </div>
 </div>
 
