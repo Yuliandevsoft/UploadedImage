@@ -1,6 +1,8 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
 
     let cropper;
+    let isSaving = false;
+
     const inputLogo = document.getElementById('inputLogo');
     const preview = document.getElementById('preview');
     const btnRecortar = document.getElementById('btnRecortar');
@@ -60,11 +62,21 @@
         titleVista.innerText = '';
         mensajeEl.innerHTML = '';
         hideAllSections();
+        isSaving = false; 
+        btnRecortar.classList.remove("disabled");
     }
 
     function loadFileToPreview(file) {
-        if (!file) { if (cropper) cropper.destroy(); preview.removeAttribute('src'); hideAllSections(); return; }
-        logoGuardado.removeAttribute('src'); logoGuardado.style.display = 'none'; titleVista.innerText = '';
+        if (!file) {
+            if (cropper) cropper.destroy();
+            preview.removeAttribute('src');
+            hideAllSections();
+            return;
+        }
+
+        logoGuardado.removeAttribute('src');
+        logoGuardado.style.display = 'none';
+        titleVista.innerText = '';
 
         const reader = new FileReader();
         reader.onload = function (event) {
@@ -73,8 +85,13 @@
             preview.style.display = 'block';
             if (cropper) cropper.destroy();
             cropper = new Cropper(preview, {
-                aspectRatio: 1, viewMode: 1, autoCropArea: 1,
-                background: false, movable: true, zoomable: true, guides: true
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+                background: false,
+                movable: true,
+                zoomable: true,
+                guides: true
             });
         };
         reader.readAsDataURL(file);
@@ -83,11 +100,24 @@
     inputLogo.addEventListener('change', function (e) {
         if (e.target.files && e.target.files.length > 0) {
             loadFileToPreview(e.target.files[0]);
-        } else { if (cropper) cropper.destroy(); preview.removeAttribute('src'); hideAllSections(); }
+        } else {
+            if (cropper) cropper.destroy();
+            preview.removeAttribute('src');
+            hideAllSections();
+        }
     });
 
+    //GUARDAR LOGO
     btnRecortar.addEventListener('click', function () {
+
+        if(isSaving) return;
+
+
         if (!cropper) { showMessage('Debe subir un logo antes de guardar', 'red'); return; }
+
+        isSaving = true;
+        btnRecortar.classList.add("disabled");
+
         const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
         const croppedImage = canvas.toDataURL('image/png');
 
@@ -105,23 +135,31 @@
                     showPreviewSection();
 
                     if (res.sobrescrito) {
-                        showMessage('El logo fue sobrescrito correctamente', 'green');
+                        showMessage('El logo fue actualizado', 'green');
                     } else {
                         showMessage('El logo se guardó correctamente', 'green');
                     }
 
                     if (cropper) cropper.destroy(); cropper = null;
-                    preview.removeAttribute('src'); preview.style.display = 'none';
+                    preview.removeAttribute('src');
+                    preview.style.display = 'none';
                     inputLogo.value = '';
                 }
             })
-            .catch(() => { M.toast({ html: 'Error de red', displayLength: 2500 }); });
+            .catch(() => {
+                M.toast({ html: 'Error de red', displayLength: 2500 });
+            })
+            .finally(() => {
+                isSaving = false;
+                btnRecortar.classList.remove("disabled");
+            });
     });
 
     btnReset.addEventListener('click', function () { resetModal(); });
 
     function showMessage(text, color) {
-        const html = `<div class="card-panel ${color} lighten-4 ${color}-text text-darken-4 items-center" style="max-height: 40px; margin: auto; display: flex; align-items: center; padding: 5 10px;">
+        const html = `<div class="card-panel ${color} lighten-4 ${color}-text text-darken-4 items-center" 
+                        style="max-height: 40px; margin: auto; display: flex; align-items: center; padding: 5 10px;">
                         <i class="material-icons left">check_circle</i>${text}
                       </div>`;
         mensajeEl.innerHTML = html;
