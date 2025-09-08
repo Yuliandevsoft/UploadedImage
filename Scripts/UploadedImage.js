@@ -14,9 +14,31 @@
     function hideAllSections() {
         if (sectionEditar) sectionEditar.style.display = 'none';
         if (sectionVista) sectionVista.style.display = 'none';
+        actualizarBotones();
     }
-    function showEditSection() { sectionEditar.style.display = 'block'; sectionVista.style.display = 'none'; }
-    function showPreviewSection() { sectionEditar.style.display = 'none'; sectionVista.style.display = 'block'; }
+
+    function showEditSection() {
+        sectionEditar.style.display = 'block';
+        sectionVista.style.display = 'none';
+        actualizarBotones();
+    }
+
+    function showPreviewSection() {
+        sectionEditar.style.display = 'none';
+        sectionVista.style.display = 'block';
+        actualizarBotones();
+    }
+
+    // Función para mostrar u ocultar los botones según sección
+    function actualizarBotones() {
+        if (sectionVista.style.display !== 'none') {
+            btnRecortar.style.display = 'none';
+            btnReset.style.display = 'none';
+        } else {
+            btnRecortar.style.display = 'inline-block';
+            btnReset.style.display = 'inline-block';
+        }
+    }
 
     hideAllSections();
 
