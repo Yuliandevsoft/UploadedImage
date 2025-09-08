@@ -4,41 +4,41 @@
     let isSaving = false;
 
     const inputLogo = document.getElementById('inputLogo');
-    const preview = document.getElementById('preview');
-    const btnRecortar = document.getElementById('btnRecortar');
-    const btnReset = document.getElementById('btnReset');
+    const previewLogo = document.getElementById('previewLogo');
+    const btnRecortarLogo = document.getElementById('btnRecortarLogo');
+    const btnResetLogo = document.getElementById('btnResetLogo');
     const logoGuardado = document.getElementById('logoGuardado');
-    const sectionEditar = document.getElementById('sectionEditar');
-    const sectionVista = document.getElementById('sectionVista');
-    const titleVista = document.getElementById('TitleVista');
-    const mensajeEl = document.getElementById('Mensaje');
+    const sectionEditarLogo = document.getElementById('sectionEditarLogo');
+    const sectionVistaLogo = document.getElementById('sectionVistaLogo');
+    const TitleVistaLogo = document.getElementById('TitleVistaLogo');
+    const MensajeLogoEl = document.getElementById('MensajeLogo');
 
     function hideAllSections() {
-        if (sectionEditar) sectionEditar.style.display = 'none';
-        if (sectionVista) sectionVista.style.display = 'none';
+        if (sectionEditarLogo) sectionEditarLogo.style.display = 'none';
+        if (sectionVistaLogo) sectionVistaLogo.style.display = 'none';
         actualizarBotones();
     }
 
     function showEditSection() {
-        sectionEditar.style.display = 'block';
-        sectionVista.style.display = 'none';
+        sectionEditarLogo.style.display = 'block';
+        sectionVistaLogo.style.display = 'none';
         actualizarBotones();
     }
 
-    function showPreviewSection() {
-        sectionEditar.style.display = 'none';
-        sectionVista.style.display = 'block';
+    function showpreviewLogoSection() {
+        sectionEditarLogo.style.display = 'none';
+        sectionVistaLogo.style.display = 'block';
         actualizarBotones();
     }
 
     // Función para mostrar u ocultar los botones según sección
     function actualizarBotones() {
-        if (sectionVista.style.display !== 'none') {
-            btnRecortar.style.display = 'none';
-            btnReset.style.display = 'none';
+        if (sectionVistaLogo.style.display !== 'none') {
+            btnRecortarLogo.style.display = 'none';
+            btnResetLogo.style.display = 'none';
         } else {
-            btnRecortar.style.display = 'inline-block';
-            btnReset.style.display = 'inline-block';
+            btnRecortarLogo.style.display = 'inline-block';
+            btnResetLogo.style.display = 'inline-block';
         }
     }
 
@@ -48,8 +48,8 @@
     M.Modal.init(elems, {
         onOpenStart: function () {
             hideAllSections();
-            preview.removeAttribute('src');
-            preview.style.display = 'none';
+            previewLogo.removeAttribute('src');
+            previewLogo.style.display = 'none';
         },
         onCloseEnd: function () { resetModal(); }
     });
@@ -57,34 +57,34 @@
     function resetModal() {
         inputLogo.value = '';
         if (cropper) { cropper.destroy(); cropper = null; }
-        preview.removeAttribute('src'); preview.style.display = 'none';
+        previewLogo.removeAttribute('src'); previewLogo.style.display = 'none';
         logoGuardado.removeAttribute('src'); logoGuardado.style.display = 'none';
-        titleVista.innerText = '';
-        mensajeEl.innerHTML = '';
+        TitleVistaLogo.innerText = '';
+        MensajeLogoEl.innerHTML = '';
         hideAllSections();
-        isSaving = false; 
-        btnRecortar.classList.remove("disabled");
+        isSaving = false;
+        btnRecortarLogo.classList.remove("disabled");
     }
 
-    function loadFileToPreview(file) {
+    function loadFileTopreviewLogo(file) {
         if (!file) {
             if (cropper) cropper.destroy();
-            preview.removeAttribute('src');
+            previewLogo.removeAttribute('src');
             hideAllSections();
             return;
         }
 
         logoGuardado.removeAttribute('src');
         logoGuardado.style.display = 'none';
-        titleVista.innerText = '';
+        TitleVistaLogo.innerText = '';
 
         const reader = new FileReader();
         reader.onload = function (event) {
-            preview.src = event.target.result;
+            previewLogo.src = event.target.result;
             showEditSection();
-            preview.style.display = 'block';
+            previewLogo.style.display = 'block';
             if (cropper) cropper.destroy();
-            cropper = new Cropper(preview, {
+            cropper = new Cropper(previewLogo, {
                 aspectRatio: 1,
                 viewMode: 1,
                 autoCropArea: 1,
@@ -99,24 +99,24 @@
 
     inputLogo.addEventListener('change', function (e) {
         if (e.target.files && e.target.files.length > 0) {
-            loadFileToPreview(e.target.files[0]);
+            loadFileTopreviewLogo(e.target.files[0]);
         } else {
             if (cropper) cropper.destroy();
-            preview.removeAttribute('src');
+            previewLogo.removeAttribute('src');
             hideAllSections();
         }
     });
 
     //GUARDAR LOGO
-    btnRecortar.addEventListener('click', function () {
+    btnRecortarLogo.addEventListener('click', function () {
 
-        if(isSaving) return;
+        if (isSaving) return;
 
 
         if (!cropper) { showMessage('Debe subir un logo antes de guardar', 'red'); return; }
 
         isSaving = true;
-        btnRecortar.classList.add("disabled");
+        btnRecortarLogo.classList.add("disabled");
 
         const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
         const croppedImage = canvas.toDataURL('image/png');
@@ -131,8 +131,8 @@
                 if (res.success) {
                     logoGuardado.src = UrlVerLogo + "?fileName=" + encodeURIComponent(res.fileName) + "&t=" + Date.now();
                     logoGuardado.style.display = 'block';
-                    titleVista.innerText = 'Vista Previa';
-                    showPreviewSection();
+                    TitleVistaLogo.innerText = 'Vista Previa';
+                    showpreviewLogoSection();
 
                     if (res.sobrescrito) {
                         showMessage('El logo fue actualizado', 'green');
@@ -141,8 +141,8 @@
                     }
 
                     if (cropper) cropper.destroy(); cropper = null;
-                    preview.removeAttribute('src');
-                    preview.style.display = 'none';
+                    previewLogo.removeAttribute('src');
+                    previewLogo.style.display = 'none';
                     inputLogo.value = '';
                 }
             })
@@ -151,19 +151,19 @@
             })
             .finally(() => {
                 isSaving = false;
-                btnRecortar.classList.remove("disabled");
+                btnRecortarLogo.classList.remove("disabled");
             });
     });
 
-    btnReset.addEventListener('click', function () { resetModal(); });
+    btnResetLogo.addEventListener('click', function () { resetModal(); });
 
     function showMessage(text, color) {
         const html = `<div class="card-panel ${color} lighten-4 ${color}-text text-darken-4 items-center" 
                         style="max-height: 40px; margin: auto; display: flex; align-items: center; padding: 5 10px;">
                         <i class="material-icons left">check_circle</i>${text}
                       </div>`;
-        mensajeEl.innerHTML = html;
-        setTimeout(() => { mensajeEl.innerHTML = ''; }, 3000);
+        MensajeLogoEl.innerHTML = html;
+        setTimeout(() => { MensajeLogoEl.innerHTML = ''; }, 3000);
     }
 
 });

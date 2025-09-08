@@ -60,7 +60,7 @@ namespace Empresa.Controllers
 
         public ActionResult Configuracion()
         {
-            ViewBag.idEmpresa = 333333;
+            ViewBag.idEmpresa = 444444;
             return View();
         }
     }
