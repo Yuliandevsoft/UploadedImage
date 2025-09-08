@@ -9,9 +9,39 @@
     const btnReset = document.getElementById('btnReset');
     const logoGuardado = document.getElementById('logoGuardado');
 
-    // Inicializar modal con callback al cerrar
+    const sectionEditar = document.getElementById('sectionEditar');
+    const sectionVista = document.getElementById('sectionVista');
+    const titleVista = document.getElementById('TitleVista');
+    const mensajeEl = document.getElementById('Mensaje');
+
+    // Helpers de visibilidad
+    function hideAllSections() {
+        if (sectionEditar) sectionEditar.style.display = 'none';
+        if (sectionVista) sectionVista.style.display = 'none';
+    }
+    function showEditSection() {
+        if (sectionEditar) sectionEditar.style.display = 'block';
+        if (sectionVista) sectionVista.style.display = 'none';
+    }
+    function showPreviewSection() {
+        if (sectionEditar) sectionEditar.style.display = 'none';
+        if (sectionVista) sectionVista.style.display = 'block';
+    }
+
+    // Estado inicial: ocultar todo hasta que el usuario seleccione o guarde
+    hideAllSections();
+
+    // Inicializar modal (Materialize) y manejar apertura/cierre
     const elems = document.querySelectorAll('.modal');
     M.Modal.init(elems, {
+        onOpenStart: function () {
+            // Cada vez que se abre el modal: ocultar la vista final
+            // (según El requisito: la vista solo se muestra después de guardar)
+            hideAllSections();
+            // limpiar preview temporal (no elimina lo guardado en servidor)
+            preview.removeAttribute('src');
+            preview.style.display = 'none';
+        },
         onCloseEnd: function () {
             resetModal();
         }
@@ -28,17 +58,35 @@
         preview.style.display = 'none';
         logoGuardado.removeAttribute('src');
         logoGuardado.style.display = 'none';
-        document.getElementById('TitleVista').innerText = '';
-        document.getElementById('Mensaje').innerHTML = '';
+        titleVista.innerText = '';
+        mensajeEl.innerHTML = '';
+        // Ocultar secciones para que no quede nada visible
+        hideAllSections();
     }
 
     // Cargar imagen en preview y Cropper
     function loadFileToPreview(file) {
-        if (!file) return;
+        if (!file) {
+            // si no hay archivo (ej. usuario canceló), ocultar todo
+            if (cropper) { cropper.destroy(); cropper = null; }
+            preview.removeAttribute('src');
+            preview.style.display = 'none';
+            hideAllSections();
+            return;
+        }
+
+        // Si carga un nuevo archivo, ocultar la vista guardada**
+        logoGuardado.removeAttribute('src');
+        logoGuardado.style.display = 'none';
+        titleVista.innerText = '';
+
         const reader = new FileReader();
         reader.onload = function (event) {
             preview.src = event.target.result;
+            // mostrar solo la sección de edición
+            showEditSection();
             preview.style.display = 'block';
+
             if (cropper) cropper.destroy();
             cropper = new Cropper(preview, {
                 aspectRatio: 1,
@@ -55,7 +103,15 @@
 
     // Detectar cambio en input
     inputLogo.addEventListener('change', function (e) {
-        loadFileToPreview(e.target.files[0]);
+        if (e.target.files && e.target.files.length > 0) {
+            loadFileToPreview(e.target.files[0]);
+        } else {
+            // usuario canceló la selección -> ocultar todo
+            if (cropper) { cropper.destroy(); cropper = null; }
+            preview.removeAttribute('src');
+            preview.style.display = 'none';
+            hideAllSections();
+        }
     });
 
     // Botón Recortar / Guardar
@@ -76,28 +132,32 @@
             .then(r => r.json())
             .then(res => {
                 if (res.success) {
-                    // Mostrar logo guardado
-                    logoGuardado.src = UrlVerLogo + "?fileName=" + res.fileName;
+                    // Mostrar solo la vista previa final (y ocultar edición)
+                    // Añadimos cache-buster para forzar recarga
+                    logoGuardado.src = UrlVerLogo + "?fileName=" + encodeURIComponent(res.fileName) + "&t=" + Date.now();
                     logoGuardado.style.display = 'block';
-                    document.getElementById('TitleVista').innerText = 'Vista Previa';
+                    titleVista.innerText = 'Vista Previa';
+
+                    // Mostrar la sección de vista y ocultar editor
+                    showPreviewSection();
 
                     showMessage('El logo se guardó correctamente', 'green');
 
-                    // Resetear cropper y preview
+                    // Resetear cropper y preview temporal
                     if (cropper) cropper.destroy();
                     cropper = null;
                     preview.removeAttribute('src');
                     preview.style.display = 'none';
-                    inputLogo.value = ''; // permite seleccionar la misma imagen
-                } else {
-                    M.toast({ html: 'Error al guardar', displayLength: 2500 });
+                    inputLogo.value = ''; // permite seleccionar la misma imagen posteriormente
                 }
             })
             .catch(() => { M.toast({ html: 'Error de red', displayLength: 2500 }); });
     });
 
-    // Botón Resetear
-    btnReset.addEventListener('click', resetModal);
+    // Botón Resetear: borra todo y oculta secciones
+    btnReset.addEventListener('click', function () {
+        resetModal();
+    });
 
     // Función para mostrar mensaje temporal
     function showMessage(text, color) {
@@ -105,8 +165,8 @@
                         <i class="material-icons left">check_circle</i>
                         ${text}
                       </div>`;
-        document.getElementById('Mensaje').innerHTML = html;
-        setTimeout(() => { document.getElementById('Mensaje').innerHTML = ''; }, 3000);
+        mensajeEl.innerHTML = html;
+        setTimeout(() => { mensajeEl.innerHTML = ''; }, 3000);
     }
 
 });
